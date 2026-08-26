@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://cevi0sjdkkmsn"
+
+[deps]
+
+files=["res://locale/foldera.en.translation", "res://locale/foldera.tr.translation", "res://locale/foldera.es.translation", "res://locale/foldera.pt.translation", "res://locale/foldera.de.translation", "res://locale/foldera.fr.translation", "res://locale/foldera.it.translation", "res://locale/foldera.ru.translation", "res://locale/foldera.pl.translation", "res://locale/foldera.nl.translation", "res://locale/foldera.id.translation", "res://locale/foldera.vi.translation", "res://locale/foldera.uk.translation"]
+
+source_file="res://locale/foldera.csv"
+dest_files=["res://locale/foldera.en.translation", "res://locale/foldera.tr.translation", "res://locale/foldera.es.translation", "res://locale/foldera.pt.translation", "res://locale/foldera.de.translation", "res://locale/foldera.fr.translation", "res://locale/foldera.it.translation", "res://locale/foldera.ru.translation", "res://locale/foldera.pl.translation", "res://locale/foldera.nl.translation", "res://locale/foldera.id.translation", "res://locale/foldera.vi.translation", "res://locale/foldera.uk.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

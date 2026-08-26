@@ -1,0 +1,24 @@
+# Godot düzenleyici önbelleği — makineye özel, her açılışta yeniden üretilir.
+.godot/
+
+# Android derleme şablonu ve Gradle çıktısı (~1,2 GB).
+# Yeniden kurmak için ANDROID.md'deki "Kurulumdaki iki tuzak" bölümüne bak:
+# android_source.zip açılıp `android/.build_version` yazılıyor, o kadar.
+android/
+
+# Dışa aktarma çıktıları depoya girmez; D:/Temp/foldera-android altında üretiliyor.
+*.aab
+*.apk
+
+# İmza anahtarları ve servis hesabı anahtarı DEPONUN DIŞINDA duruyor
+# (D:/Tools/android-keys, D:/Tools/play-api). Yine de kazara kopyalanırsa
+# yakalansın diye:
+*.keystore
+*.jks
+*-sa.json
+*.pem
+*.p12
+
+.DS_Store
+Thumbs.db
+*.log

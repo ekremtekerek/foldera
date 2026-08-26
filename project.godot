@@ -1,0 +1,57 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[admob]
+
+general/android/app_id="ca-app-pub-6484682017091395~2513514048"
+
+[application]
+
+config/name="FOLDERA"
+config/description="Fold the paper, pop the pairs."
+run/main_scene="res://scenes/main.tscn"
+config/features=PackedStringArray("4.7", "GL Compatibility")
+boot_splash/show_image=false
+config/icon="res://icon.svg"
+
+[autoload]
+
+Sfx="*res://scripts/audio_engine.gd"
+SaveData="*res://scripts/save_data.gd"
+Track="*res://scripts/analytics.gd"
+Ads="*res://scripts/ads/ad_service.gd"
+Store="*res://scripts/store/store_service.gd"
+
+[display]
+
+window/size/viewport_width=720
+window/size/viewport_height=1280
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+window/handheld/orientation=1
+
+[editor]
+
+movie_writer/mjpeg_quality=0.92
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/admob/plugin.cfg")
+
+[internationalization]
+
+locale/translations=PackedStringArray("res://locale/foldera.en.translation", "res://locale/foldera.tr.translation", "res://locale/foldera.es.translation", "res://locale/foldera.pt.translation", "res://locale/foldera.de.translation", "res://locale/foldera.fr.translation", "res://locale/foldera.it.translation", "res://locale/foldera.ru.translation", "res://locale/foldera.pl.translation", "res://locale/foldera.nl.translation", "res://locale/foldera.id.translation", "res://locale/foldera.vi.translation", "res://locale/foldera.uk.translation", "res://addons/admob/gdscript/sample/translations/admob_sample.en.translation", "res://addons/admob/gdscript/sample/translations/admob_sample.pt_BR.translation", "res://addons/admob/gdscript/sample/translations/admob_sample.es.translation", "res://addons/admob/gdscript/sample/translations/admob_sample.zh_CN.translation", "res://addons/admob/gdscript/sample/translations/admob_sample.ja.translation")
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
+textures/vram_compression/import_etc2_astc=true
+environment/defaults/default_clear_color=Color(0.965, 0.945, 0.906, 1)
