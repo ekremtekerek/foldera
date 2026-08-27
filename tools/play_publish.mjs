@@ -147,6 +147,9 @@ if (!ALLOWED_TRACKS.has(track) && track !== 'production') {
   die(`bilinmeyen kanal "${track}". Izinli: ${[...ALLOWED_TRACKS].join(', ')}, production.`)
 }
 const relStatus = flag('taslak-surum') ? 'draft' : 'completed'
+// Surum notlari dosyadan: {dil-kodu: metin}
+const notesPath = opt('notlar')
+const notes = notesPath ? JSON.parse(await readFile(notesPath, 'utf8')) : null
 // Magaza videosu. Play'in kabul ettigi tek bicim `youtube.com/watch?v=<id>`.
 // Kullanici elindeki adresi Shorts olarak verirse sessizce reddedilmesin diye
 // kimligi cikarip dogru bicime ceviriyoruz.
@@ -246,7 +249,13 @@ if (aab) {
       // ("Only releases with status draft may be created on draft app").
       // Ilk cikista `--taslak-surum` verilip surum Console'dan incelemeye
       // gonderiliyor; sonraki guncellemelerde bayrak gerekmiyor.
-      releases: [{ versionCodes: [String(up.versionCode)], status: relStatus }],
+      releases: [{
+        versionCodes: [String(up.versionCode)],
+        status: relStatus,
+        // "Yenilikler" metni. Bos birakmak yeni ozelligi gorunmez kilardi;
+        // dil basina 500 karakter siniri var.
+        ...(notes ? { releaseNotes: Object.entries(notes).map(([language, text]) => ({ language, text })) } : {}),
+      }],
     },
   })
   console.log(`  "${track}" kanalina alindi\n`)
