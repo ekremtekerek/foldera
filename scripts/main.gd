@@ -291,6 +291,18 @@ func _build_title() -> void:
 		_show_no_ads_offer())
 	v.add_child(shop)
 
+	# "Satin alimlari geri yukle" -- Google bu akisin KULLANICI TARAFINDAN
+	# ulasilabilir olmasini zorunlu tutuyor. Acilista sessiz geri yukleme
+	# zaten calisiyor, ama cihaz degistiren kullaniciya elle deneyebilecegi
+	# bir dugme de gerekiyor.
+	var restore := ChipButton.make("", ChipButton.Kind.GHOST, 22)
+	restore.name = "Restore"
+	restore.pressed.connect(func() -> void:
+		Sfx.play_ui()
+		Store.restore()
+		_flash_toast(Loc.t("TOAST_RESTORE_SENT")))
+	v.add_child(restore)
+
 	var stats := _make_label("", 24, Palette.INK_SOFT)
 	stats.name = "Stats"
 	stats.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -367,7 +379,14 @@ func _show_title() -> void:
 		lang_btn.set_caption(Loc.t("LANG_SYSTEM") if SaveData.lang == "" else Loc.native_name(SaveData.lang))
 	var shop: ChipButton = _title.find_child("Shop", true, false)
 	if shop:
-		shop.visible = not SaveData.ads_removed
+		# Teklif kapisi: sahte magaza uretim derlemesinde hicbir sey satmaz.
+		shop.visible = Store.offers_enabled() and not SaveData.ads_removed
+		shop.set_caption(Loc.f("TITLE_NO_ADS", [Store.price_of("no_ads")]))
+	# Geri yukleme yalnizca gercek magaza baglıyken anlamli.
+	var restore_btn: ChipButton = _title.find_child("Restore", true, false)
+	if restore_btn:
+		restore_btn.visible = not Store.using_stub()
+		restore_btn.set_caption(Loc.t("BTN_RESTORE"))
 		shop.set_caption(Loc.f("TITLE_NO_ADS", [Store.price_of("no_ads")]))
 	_title.modulate.a = 0.0
 	create_tween().tween_property(_title, "modulate:a", 1.0, 0.25)
