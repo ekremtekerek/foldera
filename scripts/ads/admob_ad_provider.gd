@@ -72,18 +72,27 @@ class Waiter extends RefCounted:
 
 
 static func is_available() -> bool:
-	# PLATFORM sorulur, ISLEYICI degil.
+	# Eklentinin CALISMA ZAMANI kaydini soruyoruz -- dosya varligini ya da
+	# ozellik etiketini degil.
 	#
-	# Burada eskiden `OS.has_feature("mobile")` yaziyordu ve bu SESSIZCE
-	# yanlisti: Godot 4'te "mobile" bir isleyici adi (rendering_method), platform
-	# adi degil. Bu proje `gl_compatibility` kullandigi icin etiket Android'de
-	# bile false donuyordu; sonuc olarak gercek cihazda AdMob yerine sahte
-	# saglayici seciliyor, oyuncuya "[ TEST REKLAMI ]" kaplamasi gosteriliyor ve
-	# AdMob'a tek bir istek bile gitmiyordu.
+	# Bu satirin iki onceki hali IKI kere yanlisti ve ikisi de sessizdi:
 	#
-	# Belirtisi aldaticiydi: her sey calisiyor gorunuyor, yalnizca gelir sifir.
-	return (OS.has_feature("android") or OS.has_feature("ios")) \
-		and ResourceLoader.exists("res://addons/admob/plugin.cfg")
+	#   OS.has_feature("mobile")
+	#     "mobile" Godot 4'te bir isleyici adi. Proje gl_compatibility
+	#     kullandigi icin Android'de bile false donuyordu.
+	#
+	#   ResourceLoader.exists("res://addons/admob/plugin.cfg")
+	#     `.cfg` bir Godot kaynak turu DEGIL; ResourceLoader onu tanimiyor ve
+	#     dosya pakette dururken bile HER PLATFORMDA false donuyor.
+	#     (Olcum: ResourceLoader.exists=false, FileAccess.file_exists=true.)
+	#
+	# Ikisi birlikte, gercek cihazda AdMob yerine sahte saglayicinin
+	# secilmesine ve gelirin sifir kalmasina yol aciyordu.
+	#
+	# `PoingGodotAdMob`, eklentinin kendi API'sinin (MobileAds) bagli oldugu
+	# tekil. Kayitliysa reklam katmani gercekten calisir; degilse zaten
+	# calismazdi. Ayni desen Store'da da kullaniliyor ve cihazda dogrulandi.
+	return Engine.has_singleton("PoingGodotAdMob")
 
 
 func provider_name() -> String:

@@ -24,6 +24,11 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	provider = AdMobAdProvider.new() if AdMobAdProvider.is_available() else StubAdProvider.new()
 	add_child(provider)
+	# Hangi saglayicinin secildigi logcat'te GORUNSUN. Bu satir olmadigi icin
+	# cihazda sahte saglayicinin calistigi uzun sure fark edilmedi: oyun
+	# sorunsuz gorunuyor, yalnizca AdMob panosu bos kaliyordu.
+	print("[ads] saglayici: ", provider.provider_name(),
+		"  PoingGodotAdMob kayitli mi: ", Engine.has_singleton("PoingGodotAdMob"))
 	provider.initialize(SaveData.consent)
 	# Ilk reklamlar ilk 10 seviyeden once gosterilmiyor; yine de erken yukle ki
 	# 11. seviyede bekleme olmasin.
