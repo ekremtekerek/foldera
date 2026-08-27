@@ -72,9 +72,18 @@ class Waiter extends RefCounted:
 
 
 static func is_available() -> bool:
-	# Eklenti yalnizca Android/iOS'ta gercek bir singleton'a baglaniyor.
-	# Masaustunde siniflar var ama cagrilar sessizce bos doner.
-	return OS.has_feature("mobile") and ResourceLoader.exists("res://addons/admob/plugin.cfg")
+	# PLATFORM sorulur, ISLEYICI degil.
+	#
+	# Burada eskiden `OS.has_feature("mobile")` yaziyordu ve bu SESSIZCE
+	# yanlisti: Godot 4'te "mobile" bir isleyici adi (rendering_method), platform
+	# adi degil. Bu proje `gl_compatibility` kullandigi icin etiket Android'de
+	# bile false donuyordu; sonuc olarak gercek cihazda AdMob yerine sahte
+	# saglayici seciliyor, oyuncuya "[ TEST REKLAMI ]" kaplamasi gosteriliyor ve
+	# AdMob'a tek bir istek bile gitmiyordu.
+	#
+	# Belirtisi aldaticiydi: her sey calisiyor gorunuyor, yalnizca gelir sifir.
+	return (OS.has_feature("android") or OS.has_feature("ios")) \
+		and ResourceLoader.exists("res://addons/admob/plugin.cfg")
 
 
 func provider_name() -> String:

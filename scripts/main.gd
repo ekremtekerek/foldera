@@ -97,9 +97,10 @@ func _process(delta: float) -> void:
 
 func _add_shake(strength: float) -> void:
 	_shake = minf(1.0, _shake + strength)
-	# Titresim hem Android hem iOS icinde calisiyor; platform adina degil
-	# "mobile" ozelligine bakiyoruz.
-	if strength > 0.3 and OS.has_feature("mobile"):
+	# Titresim hem Android hem iOS'ta var, ama PLATFORM sorulmali: Godot 4'te
+	# "mobile" bir isleyici adi ve bu proje gl_compatibility kullaniyor, yani
+	# o etiket cihazda da false donuyordu -- titresim hic calismamis.
+	if strength > 0.3 and (OS.has_feature("android") or OS.has_feature("ios")):
 		Input.vibrate_handheld(int(lerpf(12.0, 34.0, strength)))
 
 
