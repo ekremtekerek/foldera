@@ -1,0 +1,15 @@
+{
+  "en-US": "Fixed: on some devices the game never finished starting up its ad system, so \"watch an ad\" could never load anything. It now starts on its own if that step stalls.",
+  "tr-TR": "Düzeltildi: Bazı cihazlarda oyunun reklam sistemi açılışı hiç tamamlanmıyordu; bu yüzden \"reklam izle\" hiçbir şey yükleyemiyordu. Artık o adım takılırsa sistem kendi başına devam ediyor.",
+  "es-ES": "Corregido: en algunos dispositivos el sistema de anuncios nunca terminaba de iniciarse, así que \"ver un anuncio\" no podía cargar nada. Ahora continúa por su cuenta si ese paso se queda bloqueado.",
+  "pt-BR": "Corrigido: em alguns aparelhos o sistema de anúncios nunca terminava de iniciar, e por isso \"assistir a um anúncio\" não carregava nada. Agora ele segue sozinho se essa etapa travar.",
+  "de-DE": "Behoben: Auf manchen Geräten wurde der Start des Anzeigensystems nie abgeschlossen, sodass \"Anzeige ansehen\" nie etwas laden konnte. Es startet jetzt selbstständig, wenn dieser Schritt hängen bleibt.",
+  "fr-FR": "Corrigé : sur certains appareils, le démarrage du système de publicité ne se terminait jamais, donc « regarder une pub » ne chargeait rien. Il démarre maintenant tout seul si cette étape se bloque.",
+  "it-IT": "Corretto: su alcuni dispositivi l'avvio del sistema pubblicitario non si completava mai, quindi \"guarda un annuncio\" non caricava nulla. Ora prosegue da solo se quel passaggio si blocca.",
+  "ru-RU": "Исправлено: на некоторых устройствах запуск рекламной системы никогда не завершался, поэтому «посмотреть рекламу» ничего не загружало. Теперь она запускается сама, если этот шаг зависает.",
+  "pl-PL": "Poprawka: na części urządzeń uruchamianie systemu reklam nigdy się nie kończyło, więc „obejrzyj reklamę” nic nie wczytywało. Teraz startuje samo, gdy ten krok się zatnie.",
+  "nl-NL": "Opgelost: op sommige toestellen werd het opstarten van het advertentiesysteem nooit voltooid, waardoor \"bekijk een advertentie\" niets kon laden. Het start nu zelf als die stap blijft hangen.",
+  "id": "Diperbaiki: di sebagian perangkat, sistem iklan tidak pernah selesai dimulai sehingga \"tonton iklan\" tak bisa memuat apa pun. Kini sistem melanjutkan sendiri bila langkah itu macet.",
+  "vi": "Đã sửa: trên một số máy, hệ thống quảng cáo không bao giờ khởi động xong nên \"xem quảng cáo\" không tải được gì. Giờ nó tự tiếp tục nếu bước đó bị treo.",
+  "uk": "Виправлено: на деяких пристроях запуск рекламної системи ніколи не завершувався, тож «переглянути рекламу» нічого не завантажувало. Тепер вона запускається сама, якщо цей крок зависає."
+}
