@@ -1,0 +1,15 @@
+{
+  "en-US": "Fixed: when your hints ran out, the \"watch an ad\" option could vanish from the card, leaving no way forward. It is always there now — and if an ad is not ready yet, the game says so instead of doing nothing.",
+  "tr-TR": "Düzeltildi: İpuçların bittiğinde çıkan kartta \"reklam izle\" seçeneği kaybolabiliyordu ve hiçbir çıkış yolu kalmıyordu. Artık seçenek her zaman orada; reklam hazır değilse oyun sessiz kalmak yerine durumu söylüyor.",
+  "es-ES": "Corregido: al quedarte sin pistas, la opción \"ver un anuncio\" podía desaparecer de la tarjeta y no quedaba salida. Ahora siempre está; y si el anuncio aún no está listo, el juego lo dice en vez de no hacer nada.",
+  "pt-BR": "Corrigido: ao ficar sem dicas, a opção \"assistir a um anúncio\" podia sumir do cartão, sem saída. Agora ela está sempre lá — e se o anúncio ainda não estiver pronto, o jogo avisa em vez de não fazer nada.",
+  "de-DE": "Behoben: Wenn die Tipps aufgebraucht waren, konnte die Option \"Anzeige ansehen\" aus der Karte verschwinden — ohne Ausweg. Sie ist jetzt immer da, und wenn noch keine Anzeige bereit ist, sagt das Spiel es, statt nichts zu tun.",
+  "fr-FR": "Corrigé : une fois vos indices épuisés, l'option « regarder une pub » pouvait disparaître de la carte, sans issue. Elle est désormais toujours là — et si aucune pub n'est prête, le jeu le dit au lieu de ne rien faire.",
+  "it-IT": "Corretto: finiti gli indizi, l'opzione \"guarda un annuncio\" poteva sparire dalla scheda, senza vie d'uscita. Ora c'è sempre — e se l'annuncio non è ancora pronto, il gioco lo dice invece di non fare nulla.",
+  "ru-RU": "Исправлено: когда подсказки заканчивались, кнопка «посмотреть рекламу» могла исчезнуть с карточки, не оставляя выхода. Теперь она всегда на месте, а если реклама ещё не готова, игра сообщает об этом вместо молчания.",
+  "pl-PL": "Poprawka: gdy skończyły się podpowiedzi, opcja „obejrzyj reklamę” mogła zniknąć z karty i nie było wyjścia. Teraz jest zawsze — a jeśli reklama nie jest gotowa, gra to mówi, zamiast nic nie robić.",
+  "nl-NL": "Opgelost: als je hints op waren, kon de optie \"bekijk een advertentie\" van de kaart verdwijnen, zonder uitweg. Die staat er nu altijd — en als er nog geen advertentie klaar is, zegt het spel dat in plaats van niets te doen.",
+  "id": "Diperbaiki: saat petunjuk habis, pilihan \"tonton iklan\" bisa hilang dari kartu sehingga tidak ada jalan keluar. Kini pilihan itu selalu ada — dan jika iklan belum siap, gim memberi tahu alih-alih diam.",
+  "vi": "Đã sửa: khi hết gợi ý, tuỳ chọn \"xem quảng cáo\" có thể biến mất khỏi thẻ và không còn lối ra. Giờ nó luôn ở đó — và nếu quảng cáo chưa sẵn sàng, trò chơi sẽ báo thay vì im lặng.",
+  "uk": "Виправлено: коли підказки закінчувалися, кнопка «переглянути рекламу» могла зникнути з картки, не залишаючи виходу. Тепер вона завжди на місці, а якщо реклама ще не готова, гра повідомляє про це замість мовчання."
+}
