@@ -110,3 +110,36 @@ func show_rewarded(placement: String) -> bool:
 
 func rewarded_ready() -> bool:
 	return provider != null and provider.is_rewarded_ready()
+
+
+##
+## Odullu reklam SUNULABILIR mi -- su anda yuklu olup olmamasindan bagimsiz.
+##
+## Teklif kartlari once `rewarded_ready()` soruyordu ve reklam o an yuklu
+## degilse "reklam izle" secenegini HIC gostermiyordu. Oyuncunun gordugu sey
+## ipuclari bitince cikan, icinde hicbir cikis yolu olmayan bir kart oldu --
+## oyun bozuk gorunuyor. Oysa yeni bir uygulamada doluluk gecikmesi normal.
+##
+## Artik secenek her zaman gosteriliyor; hazir degilse KISA BIR SURE
+## bekleniyor ve olmazsa oyuncuya durum soyleniyor. Sessizlik en kotu cevap.
+func rewarded_possible() -> bool:
+	return provider != null and not using_stub() and not SaveData.ads_removed
+
+
+## Reklam hazir olana kadar bekler. Yukleme dongusu zaten arka planda
+## `RELOAD_DELAY` araliklariyla donuyor; burada yalnizca onu bekliyoruz.
+func await_rewarded(timeout: float = 8.0) -> bool:
+	if provider == null:
+		return false
+	var gecen := 0.0
+	while gecen < timeout:
+		if provider.is_rewarded_ready():
+			return true
+		await get_tree().create_timer(0.25).timeout
+		gecen += 0.25
+	Track.log_event("ad_wait_timeout", {
+		"kind": "rewarded",
+		"hata": provider.son_hata,
+		"basarisiz": provider.basarisiz,
+	})
+	return false

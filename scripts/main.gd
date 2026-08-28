@@ -529,12 +529,32 @@ func _on_hint() -> void:
 	_refresh_hud()
 
 
+##
+## Reklam hazir degilse bekletip oyuncuya durumu SOYLUYORUZ.
+##
+## Once hazir olmayan reklam sessizce false donuyordu: oyuncu dugmeye
+## basiyor, hicbir sey olmuyor, oyun bozuk gorunuyordu. Yeni bir
+## uygulamada doluluk gecikmesi normal bir durum ve bunu soylemek
+## gizlemekten iyi -- oyuncu birazdan tekrar deneyebilecegini bilir.
+func _rewarded_hazirla() -> bool:
+	if Ads.rewarded_ready():
+		return true
+	_flash_toast(Loc.t("TOAST_AD_LOADING"))
+	if await Ads.await_rewarded():
+		return true
+	_flash_toast(Loc.t("TOAST_AD_NONE"))
+	return false
+
+
 func _show_hint_offer() -> void:
 	Track.log_event("hint_exhausted", {"level": level})
 	var actions: Array = []
 	# Odul metni dugmenin UZERINDE degil ALTINDA: "REKLAM IZLE · +3 IPUCU"
 	# gibi birlesik etiketler bazi dillerde iki katina cikip karti tasiriyor.
-	if Ads.rewarded_ready():
+	# Kosul `rewarded_ready()` DEGIL: reklam o an yuklu olmasa da secenek
+	# gorunmeli. Aksi halde ipuclari bitince cikan kartta hicbir cikis yolu
+	# olmuyor ve oyun bozuk gorunuyor -- ilk oyuncuda tam olarak bu oldu.
+	if Ads.rewarded_possible():
 		actions.append({
 			"id": "ad", "label": Loc.t("BTN_WATCH_AD"), "primary": true,
 			"note": Loc.t("TOAST_HINTS_ADDED"),
@@ -547,10 +567,11 @@ func _show_hint_offer() -> void:
 	var choice: String = await card.chose
 	match choice:
 		"ad":
-			if await Ads.show_rewarded("hint"):
-				SaveData.hints.grant(3)
-				SaveData.save_data()
-				_flash_toast(Loc.t("TOAST_HINTS_ADDED"))
+			if await _rewarded_hazirla():
+				if await Ads.show_rewarded("hint"):
+					SaveData.hints.grant(3)
+					SaveData.save_data()
+					_flash_toast(Loc.t("TOAST_HINTS_ADDED"))
 		"buy":
 			await Store.purchase("hints_10")
 	_refresh_hud()
@@ -561,7 +582,7 @@ func _show_hint_offer() -> void:
 func _on_stuck() -> void:
 	Track.log_event("stuck", {"level": level, "moves": board.moves})
 	var actions: Array = []
-	if Ads.rewarded_ready():
+	if Ads.rewarded_possible():
 		actions.append({
 			"id": "solve", "label": Loc.t("BTN_WATCH_AD"), "primary": true,
 			"note": Loc.t("NOTE_SEE_SOLUTION"),
@@ -573,7 +594,7 @@ func _on_stuck() -> void:
 	var choice: String = await card.chose
 	match choice:
 		"solve":
-			if await Ads.show_rewarded("solution"):
+			if await _rewarded_hazirla() and await Ads.show_rewarded("solution"):
 				board.restart()
 				await get_tree().create_timer(0.7).timeout
 				await board.play_solution()

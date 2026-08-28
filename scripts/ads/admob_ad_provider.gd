@@ -175,6 +175,8 @@ func _load_interstitial() -> void:
 		state_changed.emit()
 	cb.on_ad_failed_to_load = func(error: LoadAdError) -> void:
 		_interstitial = null
+		son_hata = error.message
+		basarisiz += 1
 		state_changed.emit()
 		_retry(_load_interstitial, "gecis", error.message)
 	_inter_loader.load(interstitial_id, AdRequest.new(), cb)
@@ -189,6 +191,8 @@ func _load_rewarded() -> void:
 		state_changed.emit()
 	cb.on_ad_failed_to_load = func(error: LoadAdError) -> void:
 		_rewarded = null
+		son_hata = error.message
+		basarisiz += 1
 		state_changed.emit()
 		_retry(_load_rewarded, "odullu", error.message)
 	_rew_loader.load(rewarded_id, AdRequest.new(), cb)

@@ -12,6 +12,16 @@ signal state_changed()
 
 var consent := ""          # "" | "personalized" | "limited"
 
+##
+## Son yukleme hatasi ve basarisiz deneme sayisi.
+##
+## "Reklam izle dugmesi hic cikmadi" ile "reklam doldurulmadi" disaridan
+## AYIRT EDILEMIYOR: ikisi de sessiz. Oysa ilki bir kod hatasi, ikincisi
+## yeni bir uygulamada tamamen normal. Sebebi saklamazsak her seferinde
+## bastan tahmin yurutmek zorunda kaliyoruz.
+var son_hata := ""
+var basarisiz := 0
+
 
 func provider_name() -> String:
 	return "none"
