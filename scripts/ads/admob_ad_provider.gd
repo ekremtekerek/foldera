@@ -120,7 +120,17 @@ func initialize(consent_mode: String) -> void:
 ##
 ## Riza adimi HER TURLU SDK baslatmaya devam ediyor: hata durumunda oyuncuyu
 ## reklamsiz birakmak yerine kisisellestirilmemis reklam gostermek dogru olan.
+##
+## ...ama bu yalnizca geri cagrilardan BIRI calisirsa dogru. UMP hicbir
+## geri cagri vermezse `_init_sdk()` sonsuza kadar askida kaliyordu: ne
+## hata, ne uyarı, ne tek bir reklam istegi. AdMob panosunda 7 gun boyunca
+## "istekler: 0" gorunmesinin sebebi buydu -- uygulama calisiyor, oyuncu
+## oynuyor, SDK hic baslamamis.
+##
+## O yuzden bir GOZCU var: sure dolunca riza akisini beklemeden baslatiyor.
+## `_init_sdk()` zaten `_initialized` ile korunuyor, iki kez calismiyor.
 func _request_consent() -> void:
+	_gozcu_baslat()
 	_consent = ConsentInformation.new()
 	_consent.update(
 		ConsentRequestParameters.new(),
@@ -143,6 +153,25 @@ func _load_consent_form() -> void:
 			push_warning("UMP formu yuklenemedi: %s" % form_error.message)
 			_init_sdk()
 	)
+
+
+##
+## Riza akisi askida kalirsa SDK'yi yine de baslatan gozci.
+##
+## Sure KASTEN uzun: AB'de rıza formu gercekten gosteriliyorsa oyuncunun
+## okuyup secmesi icin zaman birakmali. Form kapaninca `_init_sdk()` zaten
+## kendi yolundan cagriliyor ve gozci bos donuyor. Yani gozci yalnizca
+## HICBIR SEY olmadiginda devreye giriyor.
+const CONSENT_TIMEOUT := 12.0
+
+
+func _gozcu_baslat() -> void:
+	await get_tree().create_timer(CONSENT_TIMEOUT).timeout
+	if _initialized:
+		return
+	push_warning("[admob] riza akisi %s sn icinde donmedi -- SDK yine de baslatiliyor"
+		% CONSENT_TIMEOUT)
+	_init_sdk()
 
 
 func _init_sdk() -> void:
