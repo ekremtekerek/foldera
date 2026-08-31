@@ -56,6 +56,7 @@ var _inter_loader: InterstitialAdLoader = null
 var _rew_loader: RewardedAdLoader = null
 var _consent: ConsentInformation = null
 var _initialized := false
+var _preloaded := false
 
 
 ## Tek atislik sonuc kanali: geri cagri tabanli SDK ile await eden oyun kodu
@@ -130,6 +131,7 @@ func initialize(consent_mode: String) -> void:
 ## O yuzden bir GOZCU var: sure dolunca riza akisini beklemeden baslatiyor.
 ## `_init_sdk()` zaten `_initialized` ile korunuyor, iki kez calismiyor.
 func _request_consent() -> void:
+	asama = "riza"
 	_gozcu_baslat()
 	_consent = ConsentInformation.new()
 	_consent.update(
@@ -163,6 +165,7 @@ func _load_consent_form() -> void:
 ## kendi yolundan cagriliyor ve gozci bos donuyor. Yani gozci yalnizca
 ## HICBIR SEY olmadiginda devreye giriyor.
 const CONSENT_TIMEOUT := 12.0
+const INIT_TIMEOUT := 10.0
 
 
 func _gozcu_baslat() -> void:
@@ -181,16 +184,43 @@ func _init_sdk() -> void:
 	# Hangi birimlerin yuklendigi logcat'te acikca gorunsun: yanlis kipte
 	# yayina cikmak sessizce olmasin.
 	print("[ads] birim kipi: ", "CANLI" if _live else "TEST", "  interstitial=", interstitial_id)
+	asama = "sdk"
 	var on_init := OnInitializationCompleteListener.new()
 	on_init.on_initialization_complete = func(_status: InitializationStatus) -> void:
 		preload_all()
 	MobileAds.set_request_configuration(RequestConfiguration.new())
 	MobileAds.initialize(on_init)
+	_yukleme_gozcusu()
+
+
+##
+## IKINCI gozcu: SDK baslatma geri cagrisi donmezse yuklemeyi yine de baslatir.
+##
+## Riza adimina gozcu koydum ama BIR KAT ASAGIDAKI ayni tuzagi acikta
+## biraktim: `preload_all()` yalnizca `on_initialization_complete` icinde
+## cagriliyordu. O geri cagri donmezse tek bir reklam istegi cikmiyor --
+## hata yok, saglayici hala "admob" gorunuyor, "reklam izle" dugmesi
+## cikiyor, AdMob panosunda istek SIFIR kaliyor. Panoda tam olarak bu
+## goruldu: 1.1.6'dan iki gun sonra hala 0 istek.
+##
+## `preload_all()` ikinci kez cagrilirsa zarari yok: yukleyiciler zaten
+## tek atislik ve basarisizlikta kendi yeniden deneme dongusu var.
+func _yukleme_gozcusu() -> void:
+	await get_tree().create_timer(INIT_TIMEOUT).timeout
+	if _preloaded:
+		return
+	push_warning("[admob] SDK baslatma %s sn icinde donmedi -- yukleme yine de baslatiliyor"
+		% INIT_TIMEOUT)
+	preload_all()
 
 
 # ------------------------------------------------------------------ yukleme
 
 func preload_all() -> void:
+	# Ikinci gozcu bunu tekrar cagirabilir; yukleyiciler tek atislik oldugu
+	# ve basarisizlikta kendi yeniden deneme dongusu bulundugu icin zararsiz.
+	_preloaded = true
+	asama = "yukleme"
 	_load_interstitial()
 	_load_rewarded()
 
@@ -217,6 +247,7 @@ func _load_rewarded() -> void:
 	var cb := RewardedAdLoadCallback.new()
 	cb.on_ad_loaded = func(ad: RewardedAd) -> void:
 		_rewarded = ad
+		asama = "hazir"
 		state_changed.emit()
 	cb.on_ad_failed_to_load = func(error: LoadAdError) -> void:
 		_rewarded = null

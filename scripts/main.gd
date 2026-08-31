@@ -542,7 +542,12 @@ func _rewarded_hazirla() -> bool:
 	_flash_toast(Loc.t("TOAST_AD_LOADING"))
 	if await Ads.await_rewarded():
 		return true
-	_flash_toast(Loc.t("TOAST_AD_NONE"))
+	# Mesajin sonuna KISA BIR ASAMA KODU ekleniyor. Cirkin ama gecici degil:
+	# "reklam gelmedi" raporu su ana kadar uc ayri arizayi ayni cumleyle
+	# tarif etti (riza takildi / SDK takildi / doluluk yok) ve her turunda
+	# bastan tahmin yurutmek zorunda kaldik. Bu kod oyuncudan gelen tek
+	# cumleyi dogrudan olcume ceviriyor.
+	_flash_toast("%s (%s)" % [Loc.t("TOAST_AD_NONE"), Ads.asama()])
 	return false
 
 

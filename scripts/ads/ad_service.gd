@@ -122,6 +122,12 @@ func rewarded_ready() -> bool:
 ##
 ## Artik secenek her zaman gosteriliyor; hazir degilse KISA BIR SURE
 ## bekleniyor ve olmazsa oyuncuya durum soyleniyor. Sessizlik en kotu cevap.
+## Baslatma zincirinin hangi asamada oldugu. Oyuncuya gosterilen "reklam yok"
+## mesajinin sonuna eklenir; tek bir kelime, uc ayri arizayi ayirt ediyor.
+func asama() -> String:
+	return provider.asama if provider != null else "yok"
+
+
 func rewarded_possible() -> bool:
 	return provider != null and not using_stub() and not SaveData.ads_removed
 

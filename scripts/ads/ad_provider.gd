@@ -22,6 +22,17 @@ var consent := ""          # "" | "personalized" | "limited"
 var son_hata := ""
 var basarisiz := 0
 
+##
+## Baslatma zincirinin NEREDE takildigini soyleyen asama etiketi.
+##
+## "riza" -> UMP donmedi   "sdk" -> SDK baslatma donmedi
+## "yukleme" -> istek atildi ama dolmadi   "hazir" -> reklam yuklu
+##
+## Bu etiket olmadan disaridan hepsi ayni gorunuyor: dugme cikiyor, reklam
+## gelmiyor. AdMob panosunda "istek: 0" ile "istek var, doluluk yok"
+## tamamen farkli iki ariza ve farkli duzeltme istiyor.
+var asama := "baslamadi"
+
 
 func provider_name() -> String:
 	return "none"
