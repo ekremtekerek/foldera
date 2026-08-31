@@ -1,0 +1,15 @@
+{
+  "en-US": "Another fix for ads that never loaded: one more step in the ad system's start-up could stall silently. It now continues on its own. If an ad still cannot be found, the message says which step is waiting.",
+  "tr-TR": "Reklamların hiç yüklenmemesine dair bir düzeltme daha: reklam sisteminin açılışındaki bir adım daha sessizce takılabiliyordu. Artık kendi başına devam ediyor. Reklam yine bulunamazsa mesaj hangi adımın beklediğini yazıyor.",
+  "es-ES": "Otra corrección para los anuncios que nunca cargaban: otro paso del arranque podía quedarse bloqueado en silencio. Ahora continúa solo. Si aún no hay anuncio, el mensaje indica qué paso está esperando.",
+  "pt-BR": "Mais uma correção para anúncios que nunca carregavam: outra etapa da inicialização podia travar em silêncio. Agora ela segue sozinha. Se ainda não houver anúncio, a mensagem diz qual etapa está esperando.",
+  "de-DE": "Noch eine Korrektur für nie geladene Anzeigen: ein weiterer Schritt beim Start konnte stillschweigend hängen bleiben. Er läuft jetzt von selbst weiter. Fehlt weiterhin eine Anzeige, nennt die Meldung den wartenden Schritt.",
+  "fr-FR": "Encore un correctif pour les pubs qui ne chargeaient jamais : une autre étape du démarrage pouvait se bloquer en silence. Elle continue désormais seule. S'il n'y a toujours pas de pub, le message indique l'étape en attente.",
+  "it-IT": "Un'altra correzione per gli annunci che non si caricavano mai: un altro passaggio dell'avvio poteva bloccarsi in silenzio. Ora prosegue da solo. Se l'annuncio manca ancora, il messaggio indica quale passaggio è in attesa.",
+  "ru-RU": "Ещё одно исправление для рекламы, которая не загружалась: ещё один шаг запуска мог молча зависнуть. Теперь он продолжается сам. Если рекламы всё равно нет, сообщение укажет, какой шаг ждёт.",
+  "pl-PL": "Kolejna poprawka reklam, które się nie wczytywały: jeszcze jeden krok uruchamiania mógł po cichu utknąć. Teraz idzie dalej sam. Jeśli reklamy nadal brak, komunikat wskaże, który krok czeka.",
+  "nl-NL": "Nog een oplossing voor advertenties die nooit laadden: nog een stap bij het opstarten kon stilletjes blijven hangen. Die gaat nu vanzelf verder. Is er nog steeds geen advertentie, dan noemt de melding de wachtende stap.",
+  "id": "Perbaikan lain untuk iklan yang tak pernah dimuat: satu langkah lagi saat memulai bisa macet diam-diam. Kini langkah itu berjalan sendiri. Jika iklan tetap tak ada, pesannya menyebut langkah mana yang menunggu.",
+  "vi": "Thêm một bản sửa cho quảng cáo không tải được: còn một bước khởi động nữa có thể lặng lẽ bị treo. Giờ nó tự tiếp tục. Nếu vẫn chưa có quảng cáo, thông báo sẽ cho biết bước nào đang chờ.",
+  "uk": "Ще одне виправлення для реклами, яка не завантажувалася: ще один крок запуску міг тихо зависнути. Тепер він продовжується сам. Якщо реклами й далі немає, повідомлення вкаже, який крок чекає."
+}
