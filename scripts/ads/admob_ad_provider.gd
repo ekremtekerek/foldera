@@ -46,9 +46,25 @@ const RELOAD_DELAY := 3.0
 ## Simdi hata yonu tersine dondu: etiketi koymayi unutursan uretimde TEST
 ## reklami cikar. Gelir sifir olur ama zarar vermez ve ilk raporda fark
 ## edilir. Guvenli tarafa dusen varsayilan bu.
-var _live := OS.has_feature("liveads") and not OS.is_debug_build()
+var _live := (OS.has_feature("liveads") and not OS.is_debug_build()
+	and canli_birimler_hazir())
 var interstitial_id := LIVE_INTERSTITIAL if _live else TEST_INTERSTITIAL
 var rewarded_id := LIVE_REWARDED if _live else TEST_REWARDED
+
+
+##
+## Canli birimler DOLDURULDU mu.
+##
+## Bos bir birim kimligiyle AdMob istegi sessizce basarisiz oluyor: oyun
+## kusursuz calisiyor, reklam hic gelmiyor, gelir sifir. "liveads" etiketli
+## bir derleme alinip birimler unutulursa bunun magazada fark edilmesi
+## haftalar surer.
+##
+## O yuzden eksikse CANLIYA GECILMIYOR: test birimiyle devam ediliyor ve
+## gunluge hata basiliyor. Gorunur bir "test reklami", yanlis kimlikle
+## sessizce olmekten iyidir.
+static func canli_birimler_hazir() -> bool:
+	return LIVE_INTERSTITIAL != "" and LIVE_REWARDED != ""
 
 var _interstitial: InterstitialAd = null
 var _rewarded: RewardedAd = null
@@ -102,6 +118,12 @@ func provider_name() -> String:
 
 func initialize(consent_mode: String) -> void:
 	super.initialize(consent_mode)
+	# Etiket canli diyor ama birimler bos: sessizce test reklamina dusuyoruz.
+	# Gunluge HATA olarak basiliyor cunku bu, yayindaki bir derlemede gelirin
+	# tamamini kaybettiren ve baska hicbir belirtisi olmayan bir durum.
+	if OS.has_feature("liveads") and not canli_birimler_hazir():
+		push_error("[ads] liveads etiketi var ama LIVE_* birim kimlikleri bos"
+			+ " -- test reklamiyla devam ediliyor, GELIR SIFIR")
 	if not is_available():
 		push_warning("AdMob eklentisi/platformu yok -- bu saglayici secilmemeliydi.")
 		return
