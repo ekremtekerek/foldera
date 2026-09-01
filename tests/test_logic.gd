@@ -23,6 +23,7 @@ func _initialize() -> void:
 	t_hint_wallet()
 	t_ad_policy()
 	t_store_gate()
+	t_urun_karsiligi()
 	t_localization()
 	t_device_language()
 	t_kurulum()
@@ -616,3 +617,30 @@ func _kodu_oku(yol: String) -> String:
 			continue
 		out += satir + "\n"
 	return out
+
+
+##
+## SATILAN HER URUNUN BIR KARSILIGI OLMALI.
+##
+## Fusera ve Mirera bu magaza katmanini devraldi ve ikisinde de `hints_10`
+## urunu vardi -- ama o oyunlarda ipucu sistemi yok ve `_grant` urunu
+## hicbir seye cevirmiyordu. Play Console'da acilsalardi oyuncu para
+## verip hicbir sey almayacakti.
+##
+## Hicbir belirti vermiyor: kod derleniyor, oyun calisiyor, satin alma
+## akisi bile "basarili" donuyor. Burada `_grant` 'hints' alanini genel
+## olarak isliyor, yani kural biraz farkli: her urun ya adiyla ya da bir
+## alaniyla `_grant` govdesinde karsilanmali.
+func t_urun_karsiligi() -> void:
+	print("- urun karsiligi")
+	var S = load("res://scripts/store/store_service.gd")
+	var kod := _kodu_oku("res://scripts/store/store_service.gd")
+	var govde := kod.substr(kod.find("func _grant("))
+	check(govde != "", "_grant bulunabiliyor")
+	for id in S.PRODUCTS.keys():
+		var p: Dictionary = S.PRODUCTS[id]
+		var karsilandi := govde.contains('"%s"' % id)
+		for alan in p.keys():
+			if govde.contains('"%s"' % alan):
+				karsilandi = true
+		check(karsilandi, "%s urununun _grant icinde karsiligi var" % id)
