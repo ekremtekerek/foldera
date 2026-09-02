@@ -31,6 +31,7 @@ var _win_stars: StarRow
 var _win_title: Label
 var _win_sub: Label
 var _toast: Label
+var _toast_tween: Tween = null
 
 
 func _ready() -> void:
@@ -539,8 +540,9 @@ func _on_hint() -> void:
 func _rewarded_hazirla() -> bool:
 	if Ads.rewarded_ready():
 		return true
-	_flash_toast(Loc.t("TOAST_AD_LOADING"))
+	_hold_toast(Loc.t("TOAST_AD_LOADING"))
 	if await Ads.await_rewarded():
+		_toast.modulate.a = 0.0
 		return true
 	# Mesajin sonuna KISA BIR ASAMA KODU ekleniyor. Cirkin ama gecici degil:
 	# "reklam gelmedi" raporu su ana kadar uc ayri arizayi ayni cumleyle
@@ -641,10 +643,35 @@ func _toggle_sound() -> void:
 
 func _flash_toast(text: String) -> void:
 	_toast.text = text
-	var tw := create_tween()
-	tw.tween_property(_toast, "modulate:a", 1.0, 0.14)
-	tw.tween_interval(1.5)
-	tw.tween_property(_toast, "modulate:a", 0.0, 0.4)
+	_toast_tween = _yeni_tween()
+	_toast_tween.tween_property(_toast, "modulate:a", 1.0, 0.14)
+	_toast_tween.tween_interval(1.5)
+	_toast_tween.tween_property(_toast, "modulate:a", 0.0, 0.4)
+
+
+##
+## SONUCA KADAR EKRANDA KALAN mesaj.
+##
+## "Reklam hazirlaniyor" bir `_flash_toast` idi: 2 saniye sonra soluyor.
+## Ama bekleme 8 saniye suruyor. Arada 6 saniye BOS EKRAN kaliyordu ve
+## oyuncu ekrana bakmayi birakiyordu -- sonucu bildiren ikinci mesaj,
+## yani asama kodunu tasiyan tek tesahis, hic gorulmuyordu. Oyuncunun
+## bildirdigi "hazirlaniyor diyor ama reklam cikmiyor" tam olarak buydu:
+## reklam gelmedigi icin degil, CEVABI KIMSE GORMEDIGI icin.
+##
+## Bekleme mesaji artik sonuc gelene kadar duruyor.
+func _hold_toast(text: String) -> void:
+	_toast.text = text
+	_toast_tween = _yeni_tween()
+	_toast_tween.tween_property(_toast, "modulate:a", 1.0, 0.14)
+
+
+## Onceki tween SURUYOR olabilir; oldurmeden yenisini kurmak iki animasyonu
+## ayni ozellik uzerinde yaristiriyor ve mesaj rastgele saydamlikta kaliyor.
+func _yeni_tween() -> Tween:
+	if _toast_tween != null and _toast_tween.is_valid():
+		_toast_tween.kill()
+	return create_tween()
 
 
 ## Hata ayiklama surucularini takar:
