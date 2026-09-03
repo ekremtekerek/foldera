@@ -1,0 +1,15 @@
+{
+  "en-US": "The \"loading ad\" message used to disappear after two seconds while the wait itself lasted eight, leaving the screen blank in between — so the message that says what actually happened was never seen. It now stays until there is an answer.",
+  "tr-TR": "\"Reklam hazırlanıyor\" mesajı iki saniye sonra kayboluyor, oysa bekleme sekiz saniye sürüyordu; arada ekran boş kalıyor ve sonucu söyleyen mesaj görülmüyordu. Artık cevap gelene kadar ekranda kalıyor.",
+  "es-ES": "El mensaje «cargando anuncio» desaparecía a los dos segundos aunque la espera duraba ocho, dejando la pantalla vacía en medio, así que el mensaje que explica qué pasó no se veía. Ahora permanece hasta que hay respuesta.",
+  "pt-BR": "A mensagem \"carregando anúncio\" sumia após dois segundos, mas a espera durava oito, deixando a tela vazia no meio — então a mensagem que diz o que aconteceu nunca era vista. Agora ela fica até haver resposta.",
+  "de-DE": "Die Meldung „Anzeige wird geladen“ verschwand nach zwei Sekunden, während das Warten acht dauerte — dazwischen blieb der Bildschirm leer, und die Meldung mit dem eigentlichen Ergebnis wurde nie gesehen. Sie bleibt jetzt, bis es eine Antwort gibt.",
+  "fr-FR": "Le message « chargement de la pub » disparaissait au bout de deux secondes alors que l'attente durait huit, laissant l'écran vide entre les deux : le message expliquant ce qui s'est passé n'était jamais vu. Il reste désormais jusqu'à la réponse.",
+  "it-IT": "Il messaggio «caricamento annuncio» spariva dopo due secondi mentre l'attesa durava otto, lasciando lo schermo vuoto nel mezzo: il messaggio che spiega cosa è successo non si vedeva mai. Ora resta finché non arriva una risposta.",
+  "ru-RU": "Сообщение «загрузка рекламы» исчезало через две секунды, хотя ожидание длилось восемь, и экран оставался пустым — сообщение о том, что произошло на самом деле, никто не видел. Теперь оно остаётся до ответа.",
+  "pl-PL": "Komunikat „ładowanie reklamy” znikał po dwóch sekundach, choć oczekiwanie trwało osiem, a ekran w międzyczasie był pusty — więc komunikat mówiący, co się stało, nigdy nie był widziany. Teraz zostaje aż do odpowiedzi.",
+  "nl-NL": "De melding \"advertentie laden\" verdween na twee seconden terwijl het wachten er acht duurde, met een leeg scherm ertussen — de melding die vertelt wat er gebeurde werd nooit gezien. Die blijft nu staan tot er een antwoord is.",
+  "id": "Pesan \"memuat iklan\" hilang setelah dua detik padahal penantiannya delapan detik, sehingga layar kosong di antaranya dan pesan yang menjelaskan apa yang terjadi tak pernah terlihat. Kini pesan itu bertahan sampai ada jawaban.",
+  "vi": "Thông báo \"đang tải quảng cáo\" biến mất sau hai giây trong khi thời gian chờ là tám giây, khiến màn hình trống ở giữa — nên thông báo cho biết chuyện gì thực sự xảy ra không bao giờ được nhìn thấy. Giờ nó ở lại cho đến khi có câu trả lời.",
+  "uk": "Повідомлення «завантаження реклами» зникало через дві секунди, хоча очікування тривало вісім, і екран лишався порожнім — тож повідомлення про те, що сталося насправді, ніхто не бачив. Тепер воно лишається до відповіді."
+}
