@@ -63,8 +63,18 @@ var rewarded_id := LIVE_REWARDED if _live else TEST_REWARDED
 ## O yuzden eksikse CANLIYA GECILMIYOR: test birimiyle devam ediliyor ve
 ## gunluge hata basiliyor. Gorunur bir "test reklami", yanlis kimlikle
 ## sessizce olmekten iyidir.
+##
+## UYGULAMA KIMLIGI de sayiliyor. Birimler dogru olsa bile
+## project.godot > [admob] > general/android/app_id bos birakilirsa
+## eklenti manifest'e GOOGLE'IN TEST uygulama kimligini yaziyor; SDK
+## acilis yapiyor, oyun kusursuz gorunuyor ve hicbir istek sayilmiyor.
+## Mirera 1.0.1 tam olarak boyle yayinlandi ve sifir kazandi.
+const TEST_APP_ID := "ca-app-pub-3940256099942544~3347511713"
+
 static func canli_birimler_hazir() -> bool:
-	return LIVE_INTERSTITIAL != "" and LIVE_REWARDED != ""
+	var app_id := str(ProjectSettings.get_setting("admob/general/android/app_id", ""))
+	return (LIVE_INTERSTITIAL != "" and LIVE_REWARDED != ""
+		and app_id != "" and app_id != TEST_APP_ID)
 
 var _interstitial: InterstitialAd = null
 var _rewarded: RewardedAd = null
