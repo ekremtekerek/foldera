@@ -38,6 +38,21 @@ const IPAD_H := 2732
 ## kare x iki cihaz = 156 dosya, ~60 MB. Depoda isi yok.
 const IOS_OUT := "D:/Temp/foldera-store"
 
+##
+## URUN SAYFASI BASLIGI: 5244x2950 PNG, dil basina bir dosya.
+##
+##   godot --path . -- store header        (13 dil)
+##   godot --path . -- store header en tr
+##   node tools/appstore_header.mjs        (yukler)
+##
+## Tek dosya IKI yere gidiyor -- urun sayfasinin basligi ve arama
+## sonucu gorseli -- cunku Apple bu olcuyu "universalAsset" sayiyor.
+## Yerlesim ve guvenli alan hesabi store_poster.gd `_draw_header()`
+## icinde.
+const PROMO_OUT := "D:/Temp/foldera-promo"
+const BASLIK_W := 5244
+const BASLIK_H := 2950
+
 ## Play, ulkeye gore o dilin sayfasini gosterir. Turkiye -> tr, digerleri
 ## kendi dilinde, geri kalan her yer -> en (varsayilan sayfa).
 const ALL_LOCALES := ["en", "tr", "es", "pt", "de", "fr", "it", "ru", "pl", "nl", "id", "vi", "uk"]
@@ -57,6 +72,8 @@ var _feat_poster
 ## App Store kipi. `_ipad` tek basina anlamsiz; `_ios` ile birlikte isliyor.
 var _ios := false
 var _ipad := false
+## Urun sayfasi basligi (5244x2950). Oteki kiplerden bagimsiz.
+var _baslik := false
 
 
 func _ready() -> void:
@@ -68,6 +85,7 @@ func _ready() -> void:
 	SaveData.seen = {"lock": true, "wild": true, "stars": true, "tools": true}
 	_ios = OS.get_cmdline_user_args().has("ios")
 	_ipad = OS.get_cmdline_user_args().has("ipad")
+	_baslik = OS.get_cmdline_user_args().has("header")
 	if _ipad:
 		_ios = true
 	LOCALES = _pick_locales()
@@ -99,6 +117,13 @@ func _run() -> void:
 	DisplayServer.window_set_size(Vector2i(720, 1280))
 	await _wait(30)
 	print("  oyun karesi: ", get_viewport().get_visible_rect().size)
+
+	if _baslik:
+		await _basliklar()
+		print("STORE OK  ->  ", PROMO_OUT)
+		get_tree().quit()
+		return
+
 	var olcu := _afis_olcu()
 	_shot_vp = _make_vp(olcu.x, olcu.y, false)
 	_shot_poster = _shot_vp.get_child(0)
@@ -407,6 +432,36 @@ func _set_lang(code: String) -> void:
 	_relabel("WinReplay", "BTN_REPLAY")
 	for b in [main._btn_undo, main._btn_restart, main._btn_hint]:
 		b.queue_redraw()
+
+
+##
+## URUN SAYFASI BASLIKLARI -- dil basina bir 5244x2950 PNG.
+##
+## Oyun karesi olarak SIFIRINCI sahne kullaniliyor: kagit yari katlanmis,
+## yani tek karede "jest tahtanin tamamini oynatiyor" okunuyor. Basligin
+## metni de ayni sahnenin metni (COPY.SHOTS[dil][0]), boylece gorsel ile
+## cumle ayni seyi soyluyor.
+##
+func _basliklar() -> void:
+	var vp := _make_vp(BASLIK_W, BASLIK_H, false)
+	var p = vp.get_child(0)
+	p.mode = "header"
+	for code in LOCALES:
+		_set_lang(code)
+		var dizin := "%s/%s" % [PROMO_OUT, code]
+		DirAccess.make_dir_recursive_absolute(dizin)
+		await _stage(0)
+		var tex := await _capture_game()
+		var metin: Dictionary = COPY.SHOTS[code][0]
+		p.headline = metin.h
+		p.sub = metin.s
+		p.shot = tex
+		# Alfa kanali olmadan: varlik kutuphanesi saydam pikselli gorseli
+		# islerken kenarlarda koyu bir hale birakiyor ve dosya da bos yere
+		# buyuyor. Ayni gerekce ikonda da var (_save_opak).
+		await _save_opak(vp, p, "%s/appstore-header-5244x2950.png" % dizin)
+		await _clear_stage()
+		print("  %s tamam" % code)
 
 
 # -------------------------------------------------------------- magaza metni

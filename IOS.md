@@ -32,6 +32,12 @@ node tools/appstore_shots.mjs --iphone
 node tools/appstore_shots.mjs --ipad
 bash tools/video_ios.sh                 # 13 önizleme videosu
 node tools/appstore_video.mjs           # videoları yükler
+node tools/appstore_video.mjs --kapak   # yalnız kapak karesi (gerekirse)
+godot --path . -- store header          # ürün sayfası başlıkları
+node tools/appstore_header.mjs          # başlıkları yükler
+godot --path . -- store icons           # ikonlar (1024 App Store dahil)
+node tools/appstore_kurulum.mjs         # kategori/yaş/inceleme bilgileri
+node tools/appstore_fiyat.mjs           # ücretsiz + 175 ülke
 ```
 
 **Neden `fastlane deliver` değil:** deliver metni ve görselleri dosya
@@ -103,6 +109,34 @@ Afişler Play'inkiyle aynı tasarım; `store_poster.gd` içindeki sayılar
 1080 genişliğe göre ayarlanmıştı, `_k()` ölçek katsayısıyla başka
 genişliklere taşındı. 1080'de katsayı 1.0, yani Play görselleri bit bit
 aynı kalıyor.
+
+Metne ayrılan dikey pay **genişlikle** ölçülüyor (`pw * 0.45`),
+yükseklikle değil: yazı boyutları genişlikle büyüdüğü için iPad'de
+(2048×2732, geniş ve basık) alt başlık kartın altında kalıyordu.
+
+## Ürün sayfası başlığı
+
+5244×2950 PNG, dil başına bir dosya. **Tek dosya iki yere gidiyor** —
+ürün sayfasının en üstündeki görsel ve arama sonuçlarındaki görsel —
+çünkü Apple bu ölçüyü `universalAsset` sayıyor; dil başına tek görsel
+yüklenip iki yerleşim açılıyor.
+
+Akış ekran görüntüsününkinden **farklı**: görsel önce uygulamanın
+**varlık kütüphanesine** giriyor (sürüme değil uygulamaya bağlı), sonra
+her dil için bir "placement" onu sürüm diline bağlıyor. Yerleşim
+yalnızca sürüm `Prepare for Submission` iken açılabiliyor — Arcera'da
+sürüm incelemeye girdiği için yapılamamıştı (409: *Creating a placement
+is not permitted in AppStoreVersion's current state*).
+
+**Güvenli alan.** Apple kareyi başka oranlara kırpıyor: 21:9 üstten ve
+alttan, 3:2 yanlardan. Kesişim `x 409..4835, y 351..2599` ve bütün
+içerik bunun içinde duruyor (`_draw_header()` içindeki `H_GUVENLI`).
+Dışına taşan bir şey bazı yerleşimlerde kesiliyor ve bunu mağazada
+görmeden fark etmek mümkün olmuyor.
+
+Kart ölçeği **kanvastan değil kartın kendi genişliğinden** türetiliyor:
+kanvas 5244 piksel ama kart 1153, kanvastan türetilen katsayı
+yuvarlatmayı ve gölgeyi karta göre devasa yapıyordu.
 
 ## Derleme
 

@@ -33,6 +33,7 @@ func _draw() -> void:
 	match mode:
 		"shot": _draw_shot()
 		"feature": _draw_feature()
+		"header": _draw_header()
 		"reel_bg": _draw_reel_plate()
 		"icon":
 			draw_rect(Rect2(Vector2.ZERO, size), ICON_BG)
@@ -170,8 +171,12 @@ func _draw_shot() -> void:
 ## Play afisinde doku 1:1 basiliyor (720x1280). App Store afislerinde
 ## kart daha genis oldugu icin doku buyutuluyor; oran korundugu surece
 ## germe olmuyor, yalnizca hafif yumusama var.
-func _device_card() -> void:
-	var k := _k()
+## `olcek` verilmezse kanvas genisliginden turetiliyor. Urun sayfasi
+## basligi bunu ELLE veriyor: orada kanvas 5244 piksel ama kart yalnizca
+## 1153, yani kanvastan turetilen katsayi yuvarlatmayi ve golgeyi karta
+## gore devasa yapiyor.
+func _device_card(olcek := -1.0) -> void:
+	var k := _k() if olcek < 0.0 else olcek
 	var radius := 46.0 * k
 	Surface.shadow(self, shot_rect, radius, Color(0.30, 0.22, 0.14, 0.26),
 		90.0 * k, Vector2(0, 34.0 * k))
@@ -250,6 +255,75 @@ func _draw_reel_plate() -> void:
 	Surface.shadow(self, bezel, 34.0, Color(0.30, 0.22, 0.14, 0.28), 80.0, Vector2(0, 30))
 	Surface.shadow(self, bezel, 34.0, Color(0.26, 0.18, 0.10, 0.18), 22.0, Vector2(0, 8))
 	Surface.fill_gradient(self, bezel, 34.0, Palette.PAPER.lightened(0.04), Palette.PAPER_EDGE.lightened(0.35))
+
+
+#
+# ------------------------------------------------- urun sayfasi basligi
+#
+## App Store urun sayfasinin en ustundeki gorsel ve arama sonuclarinda
+## uygulamanin yaninda cikan gorsel. TEK DOSYA IKI YERE gidiyor: Apple'in
+## referans verisinde 5244x2950 PNG "universalAsset" ve uyumlu yerlesimler
+## hem PRODUCT_PAGE_HEADER_ASSET hem APP_STORE_SEARCH_RESULTS_ASSET.
+##
+## SAYILAR BURADA SABIT, oran bagimli degil -- cunku Apple bu varligi
+## YALNIZCA 5244x2950 kabul ediyor. Olcek katsayisi yazmak, hic
+## kullanilmayacak bir esneklik icin okunmasi zor bir fonksiyon birakirdi.
+##
+## GUVENLI ALAN. Apple bu kareyi baska oranlara KIRPIYOR:
+##   21:9 -> ustten ve alttan (kalan yukseklik 5244*9/21 = 2247)
+##   3:2  -> yanlardan        (kalan genislik  2950*3/2  = 4425)
+## Ikisinin kesisimi x 409..4835, y 351..2599. Butun icerik bu
+## dikdortgenin icinde duruyor; disina tasan bir sey bazi yerlesimlerde
+## kesiliyor ve bunu magazada gormeden once fark etmek mumkun olmuyor.
+const H_GUVENLI := Rect2(409, 351, 4426, 2248)
+
+func _draw_header() -> void:
+	_gradient_bg()
+	_fold_motif(0.30)
+
+	var head := UiTheme.font(UiTheme.HEAVY)
+	var body := UiTheme.font(UiTheme.BODY)
+
+	# Kart sagda, guvenli alanin icinde ve dikey ortali.
+	var kart_h := 2050.0
+	var kart_w := kart_h * 720.0 / 1280.0
+	shot_rect = Rect2(round(3430.0), round((size.y - kart_h) * 0.5),
+		round(kart_w), round(kart_h))
+
+	# Metin solda; kartla arasinda nefes payi birakiliyor.
+	var sol := 760.0
+	var tw := shot_rect.position.x - sol - 300.0
+
+	var satirlar := headline.split("\n")
+	var hs := fit(head, satirlar, tw, 230, 140)
+	var ss := fit(body, PackedStringArray([sub]), tw, 92, 60)
+	var lh := float(hs) * 1.16
+
+	var isaret := 130.0
+	var marka_px := 96
+	var blok := isaret + 96.0 + 26.0 + 86.0 + lh * satirlar.size() + 86.0 + float(ss)
+	var y := size.y * 0.5 - blok * 0.5
+
+	_mini_mark(Vector2(sol, y), isaret)
+	draw_string(head, Vector2(sol + isaret + 44.0, y + isaret * 0.78), brand,
+		HORIZONTAL_ALIGNMENT_LEFT, -1, marka_px, Palette.INK_SOFT)
+	y += isaret + 96.0
+
+	# `_rule` ortadan hizaliyor; sola yaslamak icin merkezi elle veriyoruz.
+	_rule(sol + 130.0, y, 260.0)
+	y += 26.0 + 86.0
+
+	for l in satirlar:
+		y += lh
+		draw_string(head, Vector2(sol, y - lh * 0.24), l,
+			HORIZONTAL_ALIGNMENT_LEFT, -1, hs, Palette.INK)
+	y += 86.0 + float(ss)
+	draw_string(body, Vector2(sol, y), sub,
+		HORIZONTAL_ALIGNMENT_LEFT, -1, ss, Palette.INK_SOFT)
+
+	# Olcek KARTIN genisliginden: 1080'lik afiste kart 776 piksel ve
+	# katsayi 1.0 idi; burada kart 1153, yani ~1.49.
+	_device_card(shot_rect.size.x / 776.0)
 
 
 # ----------------------------------------------------------------- ikonlar
