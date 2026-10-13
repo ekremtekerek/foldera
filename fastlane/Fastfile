@@ -21,6 +21,7 @@
 
 require "base64"
 require "tmpdir"
+require "shellwords"
 
 default_platform(:ios)
 
@@ -82,7 +83,32 @@ platform :ios do
         keychain_password: ENV["MATCH_KEYCHAIN_PASSWORD"] || "",
       )
       File.delete(p12)
-      UI.success("dagitim sertifikasi gizli degerden kuruldu")
+
+      #
+      # ICE AKTARMA SESSIZCE BASARISIZ OLABILIYOR -- DENETLENIYOR.
+      #
+      # `import_certificate` basarisiz bir `security import`ta bile HATA
+      # VERMIYOR: su satiri basip yoluna devam ediyor ve adim yesil
+      # goruunuyor --
+      #
+      #   security: SecKeychainItemImport: MAC verification failed
+      #   during PKCS12 import (wrong password?)
+      #
+      # Sonra `sigh` "There are no local code signing identities found"
+      # diyor ve sebebi SOYLEMIYOR. Yani belirti ile sebep iki adim
+      # uzakta ve arada yesil bir adim var. Bir derleme tam olarak boyle
+      # kaybedildi.
+      #
+      # (O hatanin kendi sebebi ayri: OpenSSL 3 .p12'yi SHA-256 MAC ile
+      # imzaliyor, macOS yalnizca SHA-1 anliyor. `ios_sertifika.sh`
+      # artik `-macalg SHA1 -keypbe/-certpbe PBE-SHA1-3DES` kullaniyor.)
+      kimlikler = sh("security find-identity -v -p codesigning " \
+        "#{kc_yol.shellescape} || true", log: false)
+      unless kimlikler.include?("Apple Distribution")
+        UI.user_error!("Sertifika ice aktarilmadi: anahtarlikta imza " \
+          "kimligi yok.\n#{kimlikler}")
+      end
+      UI.success("dagitim sertifikasi kuruldu ve anahtarlikta dogrulandi")
     else
       UI.important("IOS_CERT_P12 yok -- `cert` yeni sertifika denemek zorunda kalacak.")
       cert(
