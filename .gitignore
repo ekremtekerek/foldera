@@ -18,6 +18,14 @@ android/
 *-sa.json
 *.pem
 *.p12
+*.p8
+*.csr
+*.cer
+
+# Önizleme videosu çekilirken yazılan geçici görünüm ayarı. Normalde
+# çıkışta siliniyor; kayıt yarıda kesilirse burada kalıyor ve DEPOYA
+# GİRMEMELİ — girerse oyun 720x1560 görünümüyle derlenir.
+override.cfg
 
 .DS_Store
 Thumbs.db

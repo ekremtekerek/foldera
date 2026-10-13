@@ -14,6 +14,30 @@ const OUT := "D:/Projects/foldera/store/"
 const POSTER := preload("res://tools/store_poster.gd")
 const COPY := preload("res://tools/store_copy.gd")
 
+##
+## APP STORE OLCULERI.
+##
+##   godot --path . -- store ios        13 dil, iPhone 6.1"
+##   godot --path . -- store ipad       13 dil, 13 inclik iPad
+##   godot --path . -- store ios en tr  secili diller
+##
+## Apple iPhone icin 1179x2556 ya da 1206x2622 kabul ediyor; buyuk olani
+## seciliyor, tek set butun modern iPhone'lari karsiliyor.
+##
+## iPAD SETI ZORUNLU, istege bagli degil: Godot'nun iOS disa aktariminda
+## cihaz ailesi secenegi yok, uretilen Xcode projesi EVRENSEL. Paket
+## iPad'i de hedefledigi icin App Store Connect "Add for Review"da 13
+## inclik iPad goruntusu olmadan gecmiyor (Arcera'da tam olarak bu
+## satirla reddetti).
+const IOS_W := 1206
+const IOS_H := 2622
+const IPAD_W := 2048
+const IPAD_H := 2732
+
+## App Store afisleri depoya degil, gecici dizine yaziliyor: 13 dil x 6
+## kare x iki cihaz = 156 dosya, ~60 MB. Depoda isi yok.
+const IOS_OUT := "D:/Temp/foldera-store"
+
 ## Play, ulkeye gore o dilin sayfasini gosterir. Turkiye -> tr, digerleri
 ## kendi dilinde, geri kalan her yer -> en (varsayilan sayfa).
 const ALL_LOCALES := ["en", "tr", "es", "pt", "de", "fr", "it", "ru", "pl", "nl", "id", "vi", "uk"]
@@ -30,6 +54,10 @@ var _shot_poster
 var _feat_vp: SubViewport
 var _feat_poster
 
+## App Store kipi. `_ipad` tek basina anlamsiz; `_ios` ile birlikte isliyor.
+var _ios := false
+var _ipad := false
+
 
 func _ready() -> void:
 	main = get_parent()
@@ -38,9 +66,29 @@ func _ready() -> void:
 	SaveData.total_folds = 99
 	SaveData.consent = "limited"
 	SaveData.seen = {"lock": true, "wild": true, "stars": true, "tools": true}
+	_ios = OS.get_cmdline_user_args().has("ios")
+	_ipad = OS.get_cmdline_user_args().has("ipad")
+	if _ipad:
+		_ios = true
 	LOCALES = _pick_locales()
 	DirAccess.make_dir_recursive_absolute(OUT)
 	_run()
+
+
+## Afis olcusu: Play 1080x1920, App Store cihaza gore.
+func _afis_olcu() -> Vector2i:
+	if _ipad:
+		return Vector2i(IPAD_W, IPAD_H)
+	if _ios:
+		return Vector2i(IOS_W, IOS_H)
+	return Vector2i(1080, 1920)
+
+
+func _afis_yol(code: String, i: int) -> String:
+	if _ios:
+		var onek := "ipad-" if _ipad else "ios-"
+		return "%s/%s%s/%02d.jpg" % [IOS_OUT, onek, code, i + 1]
+	return "%s%s/%02d.png" % [OUT, code, i + 1]
 
 
 func _run() -> void:
@@ -51,27 +99,41 @@ func _run() -> void:
 	DisplayServer.window_set_size(Vector2i(720, 1280))
 	await _wait(30)
 	print("  oyun karesi: ", get_viewport().get_visible_rect().size)
-	_shot_vp = _make_vp(1080, 1920, false)
+	var olcu := _afis_olcu()
+	_shot_vp = _make_vp(olcu.x, olcu.y, false)
 	_shot_poster = _shot_vp.get_child(0)
-	_feat_vp = _make_vp(1024, 500, false)
-	_feat_poster = _feat_vp.get_child(0)
-	# Katlanan kosenin altina zemin rengi basiliyor; ozellik grafiginin zemini
-	# degrade oldugu icin logonun bulundugu YUKSEKLIKTEKI renk veriliyor,
-	# yoksa kosede acik bir ucgen kaliyor.
-	_add_logo(_feat_poster, Rect2(700, 106, 288, 288),
-		Palette.BG_TOP.lerp(Palette.BG_BOTTOM, 0.42))
 
-	if OS.get_cmdline_user_args().has("plate"):
-		await _plates()
-		print("STORE OK  ->  ", OUT)
-		get_tree().quit()
-		return
+	# Ozellik grafigi, simgeler ve LISTING.md YALNIZCA Play icin. App
+	# Store'da karsiliklari yok; uretmek hem bos zaman hem de depodaki
+	# Play ciktilarini gereksiz yere yeniden yazmak olurdu.
+	if not _ios:
+		_feat_vp = _make_vp(1024, 500, false)
+		_feat_poster = _feat_vp.get_child(0)
+		# Katlanan kosenin altina zemin rengi basiliyor; ozellik grafiginin
+		# zemini degrade oldugu icin logonun bulundugu YUKSEKLIKTEKI renk
+		# veriliyor, yoksa kosede acik bir ucgen kaliyor.
+		_add_logo(_feat_poster, Rect2(700, 106, 288, 288),
+			Palette.BG_TOP.lerp(Palette.BG_BOTTOM, 0.42))
 
-	await _icons()
+		if OS.get_cmdline_user_args().has("plate"):
+			await _plates()
+			print("STORE OK  ->  ", OUT)
+			get_tree().quit()
+			return
+
+		await _icons()
+
+		# Yalnizca ikonlar istendiyse burada duruluyor: afisler on uc dil
+		# oynandigi icin dakikalar suruyor, ikonlar saniyeler.
+		if OS.get_cmdline_user_args().has("icons"):
+			print("STORE OK  ->  ", OUT)
+			get_tree().quit()
+			return
 
 	for code in LOCALES:
 		_set_lang(code)
-		DirAccess.make_dir_recursive_absolute(OUT + code)
+		DirAccess.make_dir_recursive_absolute(
+			_afis_yol(code, 0).get_base_dir())
 		var texts: Array = COPY.SHOTS[code]
 		for i in texts.size():
 			await _stage(i)
@@ -80,17 +142,19 @@ func _run() -> void:
 			_shot_poster.headline = texts[i].h
 			_shot_poster.sub = texts[i].s
 			_shot_poster.shot = tex
-			_shot_poster.shot_rect = _fit_card(tex.get_size())
-			await _save(_shot_vp, _shot_poster, "%s%s/%02d.png" % [OUT, code, i + 1])
+			_shot_poster.shot_rect = _fit_card(tex.get_size(), olcu)
+			await _save(_shot_vp, _shot_poster, _afis_yol(code, i))
 			await _clear_stage()
 
-		_feat_poster.mode = "feature"
-		_feat_poster.sub = COPY.FEATURE[code]
-		await _save(_feat_vp, _feat_poster, "%s%s/feature.png" % [OUT, code])
+		if not _ios:
+			_feat_poster.mode = "feature"
+			_feat_poster.sub = COPY.FEATURE[code]
+			await _save(_feat_vp, _feat_poster, "%s%s/feature.png" % [OUT, code])
 		print("  %s tamam" % code)
 
-	_write_listing()
-	print("STORE OK  ->  ", OUT)
+	if not _ios:
+		_write_listing()
+	print("STORE OK  ->  ", IOS_OUT if _ios else OUT)
 	get_tree().quit()
 
 
@@ -225,6 +289,23 @@ func _icons() -> void:
 	var mp = mv.get_child(0)
 	mp.mode = "icon_mono"
 	await _save(mv, mp, OUT + "icons/adaptive-monochrome-432.png")
+
+	#
+	# APP STORE IKONU: 1024x1024 ve ALFA KANALI OLMAMALI.
+	#
+	# Saydam pikseli olan ikon yuklemede "Invalid large app icon" ile geri
+	# donuyor. "icon" kipi zemini opak basiyor, o yuzden saydam olmayan
+	# bir SubViewport yetiyor.
+	#
+	# `store/` degil `brand/` altinda duruyor: bu dosya magaza ciktisi
+	# degil, DERLEME GIRDISI -- Godot'nun iOS disa aktarimi onu okuyup
+	# uygulama ikonu setini uretiyor.
+	#
+	DirAccess.make_dir_recursive_absolute("D:/Projects/foldera/brand")
+	var ios := _make_vp(1024, 1024, false)
+	var ip = ios.get_child(0)
+	ip.mode = "icon"
+	await _save_opak(ios, ip, "D:/Projects/foldera/brand/ios-icon-1024.png")
 	print("  ikonlar tamam")
 
 
@@ -257,11 +338,40 @@ func _add_logo(parent, rect: Rect2, cut: Color) -> void:
 	logo.set_process(false)
 
 
+##
+## Uzantiya gore kaydediyor. Play afisleri PNG (kayipsiz, depoda duruyor,
+## Play zaten PNG bekliyor); App Store afisleri JPEG.
+##
+## NEDEN JPEG: 13 dil x 6 kare x iki cihaz = 156 dosya. PNG olarak
+## ~2,5 MB, JPEG olarak ~350 KB. Apple ikisini de kabul ediyor ve
+## yukleme bu farki dakikalarla olcuyor. Kalite 0.92: 2622 pikselde
+## gozle fark yok.
 func _save(vp: SubViewport, p, path: String) -> void:
 	p.queue_redraw()
 	await RenderingServer.frame_post_draw
 	await RenderingServer.frame_post_draw
 	var img := vp.get_texture().get_image()
+	if path.get_extension().to_lower() == "jpg":
+		img.save_jpg(path, 0.92)
+	else:
+		img.save_png(path)
+
+
+##
+## ALFA KANALI OLMADAN kaydeder.
+##
+## `transparent_bg = false` olan bir SubViewport'un dokusunda da alfa
+## kanali VAR -- her piksel opak ama kanal duruyor ve `save_png` RGBA
+## yaziyor. Apple bunu "Invalid large app icon" ile reddediyor; hatanin
+## ortaya ciktigi yer on bes dakikalik bir derlemenin SONU.
+##
+## `FORMAT_RGB8`a cevirmek kanali tamamen dusuruyor (ffprobe: rgb24).
+func _save_opak(vp: SubViewport, p, path: String) -> void:
+	p.queue_redraw()
+	await RenderingServer.frame_post_draw
+	await RenderingServer.frame_post_draw
+	var img := vp.get_texture().get_image()
+	img.convert(Image.FORMAT_RGB8)
 	img.save_png(path)
 
 
@@ -346,16 +456,35 @@ func _write_listing() -> void:
 ## (baslik uzunlugu degisse de cerceveleme ayni duruyor) ve metin blogu icin
 ## ust tarafta her zaman yer birakiliyor.
 ##
-func _fit_card(tex: Vector2) -> Rect2:
-	const MAX_W := 776.0
-	const BOTTOM := 1826.0
-	const TEXT_ROOM := 486.0
-	var w := MAX_W
+##
+## Oyun kartinin afis icindeki yeri.
+##
+## Sayilar 1080x1920 icin ayarlanmisti; App Store baska olculer istedigi
+## icin ORAN olarak yazildilar. 1080x1920'de sonuc bit bit ayni kaliyor
+## (0.718518*1080 = 776, 0.951041*1920 = 1826, 0.253125*1920 = 486).
+##
+## iPad afisi cok daha genis (2048x2732, oran 0.75): orada kart genisligi
+## degil, metne ayrilan YUKSEKLIK baglayici oluyor ve asagidaki kisma
+## kendiliginden devreye giriyor.
+func _fit_card(tex: Vector2, afis: Vector2i) -> Rect2:
+	var pw := float(afis.x)
+	var ph := float(afis.y)
+	var max_w := pw * 0.718518
+	var bottom := ph * 0.951041
+	# METNE AYRILAN YER GENISLIKLE OLCULUYOR, YUKSEKLIKLE DEGIL.
+	#
+	# Yazi boyutlari `store_poster.gd` icindeki `_k()` ile, yani afisin
+	# GENISLIGIYLE buyuyor. Bu payi yukseklikle hesaplamak iPad'de
+	# (2048x2732 -- genis ve basik) metni buyutup ona ayrilan yeri
+	# daraltiyordu: alt baslik kartin altinda kaliyordu.
+	# 0.45 * 1080 = 486, yani 1080x1920'de eski sayiyla birebir ayni.
+	var text_room := pw * 0.45
+	var w := max_w
 	var h := w * tex.y / tex.x
-	if BOTTOM - h < TEXT_ROOM:
-		h = BOTTOM - TEXT_ROOM
+	if bottom - h < text_room:
+		h = bottom - text_room
 		w = h * tex.x / tex.y
-	return Rect2(round((1080.0 - w) * 0.5), round(BOTTOM - h), round(w), round(h))
+	return Rect2(round((pw - w) * 0.5), round(bottom - h), round(w), round(h))
 
 
 func _relabel(node_name: String, key: String) -> void:
@@ -367,8 +496,16 @@ func _relabel(node_name: String, key: String) -> void:
 	b.queue_redraw()
 
 
+## Argumanlarda gecen dil kodlari secimi daraltiyor
+## ("-- store ios en tr"); hicbiri yoksa half1/half2, o da yoksa hepsi.
 func _pick_locales() -> Array:
 	var a := OS.get_cmdline_user_args()
+	var secili: Array = []
+	for kod in ALL_LOCALES:
+		if a.has(kod):
+			secili.append(kod)
+	if not secili.is_empty():
+		return secili
 	if a.has("half1"):
 		return ALL_LOCALES.slice(0, 7)
 	if a.has("half2"):

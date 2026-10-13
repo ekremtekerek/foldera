@@ -686,6 +686,7 @@ const DEBUG_RUNNERS := {
 	"soak": "res://tests/soak_runner.gd",
 	"store": "res://tools/store_shots.gd",
 	"reel": "res://tools/reel_runner.gd",
+	"video": "res://tools/video_runner.gd",
 }
 
 

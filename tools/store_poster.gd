@@ -108,54 +108,75 @@ func _line(f: Font, text: String, baseline: float, px: int, col: Color) -> void:
 
 # ------------------------------------------------------------ ekran goruntusu
 
+##
+## OLCEK KATSAYISI. Afisin butun sayilari 1080 piksel genislige gore
+## ayarlandi. App Store ayni tasarimi BASKA genisliklerde istiyor --
+## iPhone 6.1" 1206, 13 inclik iPad 2048 -- ve sayilar sabit kalirsa
+## iPad afisinde yazi, kenar bosluklari ve golgeler kanvasa gore
+## kuculup tasarimi dagitiyor.
+##
+## 1080'de k = 1.0, yani Play gorselleri bit bit ayni kaliyor.
+func _k() -> float:
+	return size.x / 1080.0
+
+
 func _draw_shot() -> void:
 	_gradient_bg()
 	_fold_motif(0.52)
 
-	var pad := 92.0
+	var k := _k()
+	var pad := 92.0 * k
 	var avail := size.x - pad * 2.0
 	var head := UiTheme.font(UiTheme.HEAVY)
 	var body := UiTheme.font(UiTheme.BODY)
 
 	var lines := headline.split("\n")
-	var hs := fit(head, lines, avail, 82, 54)
-	var ss := fit(body, PackedStringArray([sub]), avail, 40, 28)
+	var hs := fit(head, lines, avail, int(82.0 * k), int(54.0 * k))
+	var ss := fit(body, PackedStringArray([sub]), avail, int(40.0 * k), int(28.0 * k))
 	var lh := float(hs) * 1.16
+
+	var marka_px := int(34.0 * k)
+	var isaret := 46.0 * k
 
 	# Metin blogu, kartin ustundeki bosluga DIKEY ORTALANIYOR. Boylece baslik
 	# bir satir da olsa iki satir da olsa cerceveleme ayni duruyor.
-	var block := 46.0 + 34.0 + 9.0 + 30.0 + lh * lines.size() + 30.0 + float(ss)
+	var block := isaret + 34.0 * k + 9.0 * k + 30.0 * k \
+		+ lh * lines.size() + 30.0 * k + float(ss)
 	var top := (shot_rect.position.y - block) * 0.5
 	var y := top
 
 	# Marka satiri olculerek ortalaniyor; "FOLDERA" genisligini varsaymak
 	# yazi tipi degisince satiri kaydirirdi.
-	var bw := head.get_string_size(brand, HORIZONTAL_ALIGNMENT_LEFT, -1, 34).x
-	var bx := (size.x - (46.0 + 16.0 + bw)) * 0.5
-	_mini_mark(Vector2(bx, y), 46.0)
-	draw_string(head, Vector2(bx + 62.0, y + 37.0), brand,
-		HORIZONTAL_ALIGNMENT_LEFT, -1, 34, Palette.INK_SOFT)
-	y += 46.0 + 34.0
+	var bw := head.get_string_size(brand, HORIZONTAL_ALIGNMENT_LEFT, -1, marka_px).x
+	var bx := (size.x - (isaret + 16.0 * k + bw)) * 0.5
+	_mini_mark(Vector2(bx, y), isaret)
+	draw_string(head, Vector2(bx + 62.0 * k, y + 37.0 * k), brand,
+		HORIZONTAL_ALIGNMENT_LEFT, -1, marka_px, Palette.INK_SOFT)
+	y += isaret + 34.0 * k
 
-	_rule(size.x * 0.5, y, 92.0)
-	y += 9.0 + 30.0
+	_rule(size.x * 0.5, y, 92.0 * k)
+	y += 9.0 * k + 30.0 * k
 
 	for l in lines:
 		y += lh
 		_line(head, l, y - lh * 0.24, hs, Palette.INK)
-	y += 30.0 + float(ss)
+	y += 30.0 * k + float(ss)
 	_line(body, sub, y, ss, Palette.INK_SOFT)
 
 	_device_card()
 
 
 ## Oyun ekrani, kalinligi ve iki katmanli golgesi olan bir kart olarak.
-## Doku 1:1 basiliyor (720x1280) -- yeniden orneklenmedigi icin taslarin
-## kenarlari afiste de keskin.
+## Play afisinde doku 1:1 basiliyor (720x1280). App Store afislerinde
+## kart daha genis oldugu icin doku buyutuluyor; oran korundugu surece
+## germe olmuyor, yalnizca hafif yumusama var.
 func _device_card() -> void:
-	var radius := 46.0
-	Surface.shadow(self, shot_rect, radius, Color(0.30, 0.22, 0.14, 0.26), 90.0, Vector2(0, 34))
-	Surface.shadow(self, shot_rect, radius, Color(0.26, 0.18, 0.10, 0.18), 24.0, Vector2(0, 8))
+	var k := _k()
+	var radius := 46.0 * k
+	Surface.shadow(self, shot_rect, radius, Color(0.30, 0.22, 0.14, 0.26),
+		90.0 * k, Vector2(0, 34.0 * k))
+	Surface.shadow(self, shot_rect, radius, Color(0.26, 0.18, 0.10, 0.18),
+		24.0 * k, Vector2(0, 8.0 * k))
 	if shot == null:
 		Surface.fill(self, shot_rect, radius, Palette.PAPER)
 		return
@@ -164,7 +185,7 @@ func _device_card() -> void:
 	for p in pts:
 		uvs.append((p - shot_rect.position) / shot_rect.size)
 	draw_colored_polygon(pts, Color.WHITE, uvs, shot)
-	Surface.rim(self, shot_rect.grow(-1.5), radius, Color(1, 1, 1, 0.55), 3.0)
+	Surface.rim(self, shot_rect.grow(-1.5 * k), radius, Color(1, 1, 1, 0.55), 3.0 * k)
 
 
 # ------------------------------------------------------------ ozellik grafigi

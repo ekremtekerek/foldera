@@ -1,0 +1,108 @@
+{
+  "_hakkinda": [
+    "App Store'a OZEL metinler. Burada YALNIZCA Play'de karsiligi olmayan",
+    "alanlar duruyor; uygulama adi ve aciklama govdesi copy.json'dan",
+    "geliyor ve iki yerde tutulmuyor.",
+    "",
+    "Neden ayri bir dosya: Apple'in alanlari Play'inkiyle ortusmuyor.",
+    "Play'in 80 karakterlik 'kisa aciklama'sinin karsiligi Apple'da 30",
+    "karakterlik ALT BASLIK; Play'de hic olmayan bir ANAHTAR KELIME alani",
+    "var (100 karakter) ve incelemeden gecmeden degistirilebilen bir",
+    "TANITIM METNI (170 karakter).",
+    "",
+    "Sinirlari tools/appstore_meta.mjs denetliyor. Elle saymayin: Apple",
+    "KARAKTER sayiyor, bayt degil, ve Turkce/Rusca/Vietnamca metinlerde",
+    "ikisi ayni sey degil.",
+    "",
+    "'yeni' (surum notlari) alani BURADA YOK. Ilk surumde App Store",
+    "'Yenilikler' alanini ne istiyor ne de gosteriyor; bos bir metin",
+    "gondermek kaydi reddettiriyor. 1.0.1'de her dile bir 'yeni' satiri",
+    "eklenecek ve appstore_meta.mjs onu kendiliginden aciklamanin sonuna",
+    "ekleyecek."
+  ],
+  "baglantilar": {
+    "gizlilik": "https://sites.google.com/view/foldera-privacy",
+    "destek": "https://ekremtekerek.github.io/foldera-destek.html",
+    "pazarlama": "https://ekremtekerek.github.io/"
+  },
+  "diller": {
+    "en": {
+      "apple": "en-US",
+      "altbaslik": "One fold moves everything.",
+      "anahtar": "origami,match,pairs,offline,relax,brain,logic,tiles,no wifi,calm,zen,levels,free",
+      "tanitim": "500 hand-checked levels, every one solvable whatever order you fold in. No timers, no lives, no account — just paper, folds and a quiet click."
+    },
+    "tr": {
+      "apple": "tr",
+      "altbaslik": "Tek kat, tüm tahta oynar.",
+      "anahtar": "origami,eşleştirme,çevrimdışı,rahatlatıcı,zekâ,mantık,taş,sakin,bölüm,ücretsiz,beyin",
+      "tanitim": "500 elden geçmiş bölüm; hangi sırayla katlarsan katla çözülebilir kalıyor. Süre yok, can yok, hesap yok — sadece kâğıt, katlar ve o küçük ses."
+    },
+    "es": {
+      "apple": "es-ES",
+      "altbaslik": "Un pliegue mueve todo.",
+      "anahtar": "origami,parejas,sin conexión,relax,lógica,fichas,mente,niveles,gratis,calma,cerebro",
+      "tanitim": "500 niveles verificados: se resuelven en cualquier orden de pliegues. Sin tiempo, sin vidas, sin cuenta — solo papel, pliegues y un clic suave."
+    },
+    "pt": {
+      "apple": "pt-BR",
+      "altbaslik": "Uma dobra move tudo.",
+      "anahtar": "origami,pares,offline,relaxante,lógica,peças,mente,níveis,grátis,calma,cérebro,sem wifi",
+      "tanitim": "500 níveis verificados: continuam solucionáveis em qualquer ordem de dobras. Sem tempo, sem vidas, sem conta — só papel, dobras e um clique."
+    },
+    "de": {
+      "apple": "de-DE",
+      "altbaslik": "Eine Faltung bewegt alles.",
+      "anahtar": "origami,paare,offline,entspannt,logik,steine,knobeln,level,gratis,ruhig,gehirn,denkspiel",
+      "tanitim": "500 geprüfte Level, in jeder Faltreihenfolge lösbar. Keine Zeit, keine Leben, kein Konto — nur Papier, Falten und ein leises Klicken."
+    },
+    "fr": {
+      "apple": "fr-FR",
+      "altbaslik": "Un pli déplace tout.",
+      "anahtar": "origami,paires,hors ligne,détente,logique,tuiles,réflexion,niveaux,gratuit,calme,cerveau",
+      "tanitim": "500 niveaux vérifiés, solubles quel que soit l'ordre des plis. Pas de minuteur, pas de vies, pas de compte — juste du papier et des plis."
+    },
+    "it": {
+      "apple": "it",
+      "altbaslik": "Una piega muove tutto.",
+      "anahtar": "origami,coppie,offline,relax,logica,tessere,mente,livelli,gratis,calma,cervello,rompicapo",
+      "tanitim": "500 livelli verificati, risolvibili in qualsiasi ordine di piegatura. Niente timer, niente vite, niente account — solo carta e pieghe."
+    },
+    "ru": {
+      "apple": "ru",
+      "altbaslik": "Один сгиб двигает всё.",
+      "anahtar": "оригами,пары,офлайн,релакс,логика,фишки,ум,уровни,бесплатно,спокойно,мозг",
+      "tanitim": "500 проверенных уровней: решаются при любом порядке сгибов. Без таймера, без жизней, без аккаунта — только бумага и сгибы."
+    },
+    "pl": {
+      "apple": "pl",
+      "altbaslik": "Jedno zgięcie rusza wszystko.",
+      "anahtar": "origami,pary,offline,relaks,logika,kafelki,umysł,poziomy,darmowa,spokój,mózg,bez wifi",
+      "tanitim": "500 sprawdzonych poziomów, rozwiązywalnych w każdej kolejności zgięć. Bez czasu, bez żyć, bez konta — tylko papier i zagięcia."
+    },
+    "nl": {
+      "apple": "nl-NL",
+      "altbaslik": "Eén vouw beweegt alles.",
+      "anahtar": "origami,paren,offline,ontspannen,logica,tegels,brein,levels,gratis,rustig,denkspel",
+      "tanitim": "500 geteste levels, in elke vouwvolgorde oplosbaar. Geen timer, geen levens, geen account — alleen papier, vouwen en een zachte klik."
+    },
+    "id": {
+      "apple": "id",
+      "altbaslik": "Satu lipatan ubah semuanya.",
+      "anahtar": "origami,pasangan,offline,santai,logika,ubin,otak,level,gratis,tenang,teka teki,tanpa wifi",
+      "tanitim": "500 level teruji, tetap bisa diselesaikan dalam urutan lipatan apa pun. Tanpa waktu, tanpa nyawa, tanpa akun — hanya kertas dan lipatan."
+    },
+    "vi": {
+      "apple": "vi",
+      "altbaslik": "Một nếp gấp, cả bàn đổi.",
+      "anahtar": "origami,cặp đôi,ngoại tuyến,thư giãn,logic,ô,trí não,màn chơi,miễn phí,yên tĩnh",
+      "tanitim": "500 màn đã kiểm chứng, luôn giải được dù gấp theo thứ tự nào. Không giờ, không mạng, không tài khoản — chỉ có giấy và nếp gấp."
+    },
+    "uk": {
+      "apple": "uk",
+      "altbaslik": "Один згин рухає все.",
+      "anahtar": "орігамі,пари,офлайн,релакс,логіка,фішки,розум,рівні,безкоштовно,спокій,мозок",
+      "tanitim": "500 перевірених рівнів, розв'язні за будь-якого порядку згинів. Без таймера, без життів, без акаунта — лише папір і згини."
+    }
+  }
+}

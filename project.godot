@@ -11,6 +11,7 @@ config_version=5
 [admob]
 
 general/android/app_id="ca-app-pub-6484682017091395~2513514048"
+general/ios/app_id="ca-app-pub-6484682017091395~6008222688"
 
 [application]
 
