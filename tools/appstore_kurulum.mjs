@@ -143,6 +143,23 @@ if (!fs.existsSync(ILETISIM_YOL)) {
   const sv = sr.data.find((x) => x.attributes.versionString === SURUM);
   if (!sv) throw new Error(`surum ${SURUM} bulunamadi`);
 
+  //
+  // TELIF HAKKI ZORUNLU ve eksikligi yalnizca "Add for Review"da
+  // ortaya cikiyor: API'nin gonderim ucu "This resource cannot be
+  // reviewed, please check associated errors" diyor ve HANGI alanin
+  // eksik oldugunu soylemiyor. App Store Connect arayuzu soyluyor.
+  //
+  // Bicim Apple'in bekledigi gibi: yil + hak sahibi, "(c)" YOK --
+  // Apple onu kendisi ekliyor.
+  const yil = new Date().getFullYear();
+  await api("PATCH", `v1/appStoreVersions/${sv.id}`, {
+    data: {
+      type: "appStoreVersions", id: sv.id,
+      attributes: { copyright: `${yil} ${kisi.ad} ${kisi.soyad}` },
+    },
+  });
+  console.log(`telif hakki: ${yil} ${kisi.ad} ${kisi.soyad}`);
+
   const nitelik = {
     contactFirstName: kisi.ad,
     contactLastName: kisi.soyad,

@@ -66,13 +66,23 @@ if (bagla) {
   if (!paket) throw new Error("islenmis (VALID) paket yok");
 
   // Ihracat uyumlulugu paketin KENDI alani; surumun degil.
-  await api("PATCH", `v1/builds/${paket.id}`, {
-    data: {
-      type: "builds", id: paket.id,
-      attributes: { usesNonExemptEncryption: false },
-    },
-  });
-  console.log("ihracat uyumlulugu: muaf sifreleme (yalnizca HTTPS)");
+  //
+  // Godot urettigi Info.plist'e `ITSAppUsesNonExemptEncryption` yaziyor,
+  // yani deger yuklemede ZATEN dolu gelebiliyor. O zaman Apple
+  // "You cannot update when the value is already set" ile 409 donuyor
+  // ve bu bir hata DEGIL -- istedigimiz sonuc zaten yerinde.
+  try {
+    await api("PATCH", `v1/builds/${paket.id}`, {
+      data: {
+        type: "builds", id: paket.id,
+        attributes: { usesNonExemptEncryption: false },
+      },
+    });
+    console.log("ihracat uyumlulugu: muaf sifreleme (yalnizca HTTPS)");
+  } catch (e) {
+    if (!/already set/i.test(e.message)) throw e;
+    console.log("ihracat uyumlulugu: paketten geldi, dokunulmadi");
+  }
 
   await api("PATCH", `v1/appStoreVersions/${sv.id}`, {
     data: {
