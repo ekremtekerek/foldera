@@ -1,0 +1,45 @@
+PURPOSE AND TARGET AUDIENCE
+Foldera is a paper-folding puzzle. The player drags across the board, the
+sheet folds along that line, and every tile mirrors at once; matching pairs
+meet and disappear. It ships with 500 hand-checked levels. The audience is
+casual puzzle players of any age who want a calm game with no timers, no
+lives and no pressure. Every level is machine-verified before release, so a
+board can never become unsolvable no matter what order the player folds in --
+that is the problem the game solves and the reason people stay with it.
+
+HOW TO SET UP AND ACCESS EVERY FEATURE
+There is nothing to set up. Launch the app and the first level starts. There
+is no account, no login, no registration and no configuration screen, so no
+credentials are needed to review the app. All 500 levels are on the device
+and the entire app works offline, including in airplane mode. Later rules
+(pinned tiles, jokers, shrinking paper) are introduced automatically as the
+player progresses; no unlock, purchase or code is required to reach them.
+Themes and settings are reachable from the title screen.
+
+EXTERNAL SERVICES, TOOLS AND PLATFORMS
+Google AdMob (Google Mobile Ads SDK) for advertising is the ONLY external
+service the app contacts. There is no backend of our own, no authentication
+service, no payment processor, no AI service and no third-party analytics
+SDK. In-game event logging exists but is written to a local file on the
+device and is never transmitted. The app is built with Godot Engine 4.7.
+
+IN-APP PURCHASES AND ACCOUNTS
+There are no in-app purchases on iOS. The purchase layer in the codebase is
+Google Play Billing only and is disabled on this platform, so no purchase or
+restore controls are shown. There is no account creation, therefore no
+account deletion flow is required. There is no user-generated content, no
+chat and no social feature, therefore no content reporting or blocking
+mechanism is required. Age rating is 4+.
+
+REGIONAL DIFFERENCES
+None. The app behaves identically in every region. It is localized into 13
+languages (text only; the puzzles, rules and content are the same
+everywhere). Advertising is non-personalised in all regions: the app does not
+present an App Tracking Transparency prompt and requests non-personalised ads
+only, which is why the App Privacy labels declare no tracking.
+
+REGULATED INDUSTRY OR PROTECTED THIRD-PARTY MATERIAL
+Not applicable. The app is a self-contained puzzle game in no regulated
+industry. All artwork, audio, level data and source code are original work by
+the developer; the app uses no third-party content, which matches the content
+rights declaration on this listing.
